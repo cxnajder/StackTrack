@@ -4,6 +4,8 @@
 #include <sstream>
 #include <memory>
 #include <chrono>
+#include <thread>
+#include <unordered_map>
 
 class IStringStreamLogger
 {
@@ -30,16 +32,17 @@ class StackTrackUserClass;
 class StackTrack
 {   
     public:
-    explicit StackTrack(const std::string& callerName);
+    explicit StackTrack(const std::string& callerName, const std::thread::id& threadId);
     ~StackTrack();
     
     private:
     StackTrack(const StackTrack&) = delete;
     StackTrack& operator=(const StackTrack&) = delete;
 
+    const std::thread::id mThread;
     const std::string mCallerName;
-    static unsigned int mCount;
-    static std::stringstream mLog;
+    static  std::unordered_map<std::thread::id, unsigned int> mCount;
+    static std::unordered_map<std::thread::id ,std::stringstream> mLog;
     static std::unique_ptr<IStringStreamLogger> mLogger;
     std::chrono::time_point<std::chrono::high_resolution_clock> mStart;
 

@@ -20,20 +20,25 @@ void StringStreamLoggerToFile::Log(const std::stringstream& ss)
 }
 
 // StackTrack
-StackTrack::StackTrack(const std::string& callerName)
-: mCallerName(callerName)
+StackTrack::StackTrack(const std::string& callerName,  const std::thread::id& threadId)
+: mCallerName(callerName), mThread(threadId)
 {
-    if(mCount==0)
+    if(auto search = mCount.find(mThread); search == mCount.end())
     {
-        mLog << "StackTrack::start \n";
+        mCount.insert({mThread, 0});
+        mLog.insert({mThread, std::stringstream()});
+    }
+    if(mCount.at(mThread)==0)
+    {
+        mLog.at(mThread) << "StackTrack::" << mThread <<"::start \n";
     }
     if(mLogger == nullptr)
     {
         mLogger = std::make_unique<StringStreamLoggerToConsole>();
     }
-    ++mCount;
+    ++mCount.at(mThread);
     PrettifyStart();
-    mLog << mCallerName << "::start \n";
+    mLog.at(mThread) << mCallerName << "::start \n";
     mStart = std::chrono::high_resolution_clock::now();
 }
 
@@ -42,45 +47,46 @@ StackTrack::~StackTrack()
     std::chrono::duration<float> dur = std::chrono::high_resolution_clock::now() - mStart;
     float ms = dur.count() * 1000.0f;
     PrettifyStop();
-    mLog << mCallerName << "::stop ";
-    mLog << "- " << ms << "ms \n";
-    --mCount;
-    if(mCount == 0)
+    mLog.at(mThread) << mCallerName << "::stop ";
+    mLog.at(mThread) << "- " << ms << "ms \n";
+    --mCount.at(mThread);
+    if(mCount.at(mThread) == 0)
     {
-        mLog << "StackTrack::stop \n";
-        mLogger->Log(mLog);
+        mLog.at(mThread) << "StackTrack::" << mThread <<"::stop \n";
+        
+        // might need a mutex/lockGuard here!
+        mLogger->Log(mLog.at(mThread));
     }
 }
-
-unsigned int StackTrack::mCount = 0;
-std::stringstream StackTrack::mLog;
+std::unordered_map<std::thread::id, unsigned int> StackTrack::mCount;
+std::unordered_map<std::thread::id ,std::stringstream> StackTrack::mLog;
 std::unique_ptr<IStringStreamLogger> StackTrack::mLogger;
 
 
 void StackTrack::PrettifyStart() // Adds an arrow "--->"
 {
-    if (mCount == 1)
+    if (mCount.at(mThread) == 1)
     {
-        mLog << "├─";
+        mLog.at(mThread) << "├─";
     }
     else
     {
-        for (unsigned int i = 1; i < mCount; ++i)
-            mLog << "│ ";
-        mLog << "├─";
+        for (unsigned int i = 1; i < mCount.at(mThread); ++i)
+            mLog.at(mThread) << "│ ";
+        mLog.at(mThread) << "├─";
     }
 }
 void StackTrack::PrettifyStop() // Adds an arrow "<---"
 {
-    if (mCount == 1)
+    if (mCount.at(mThread) == 1)
     {
-        mLog << "├─";
+        mLog.at(mThread) << "├─";
     }
     else
     {
-        for (unsigned int i = 1; i < mCount; ++i)
-            mLog << "│ ";
-        mLog << "├─";
+        for (unsigned int i = 1; i < mCount.at(mThread); ++i)
+            mLog.at(mThread) << "│ ";
+        mLog.at(mThread) << "├─";
     }
 
 }
