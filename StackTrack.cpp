@@ -52,10 +52,9 @@ void StackTrack::PrettifyStart() // Adds an arrow "--->"
     }
     else
     {
-        mLog << "│";
         for (unsigned int i = 1; i < mCount; ++i)
-            mLog << "  ";
-        mLog << "└─";
+            mLog << "│ ";
+        mLog << "├─";
     }
 }
 void StackTrack::PrettifyStop() // Adds an arrow "<---"
@@ -66,10 +65,9 @@ void StackTrack::PrettifyStop() // Adds an arrow "<---"
     }
     else
     {
-        mLog << "│";
         for (unsigned int i = 1; i < mCount; ++i)
-            mLog << "  ";
-        mLog << "┌─";
+            mLog << "│ ";
+        mLog << "├─";
     }
 
 }
