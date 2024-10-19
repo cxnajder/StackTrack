@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "StackTrack.macro.h"
 
 void buzz()
