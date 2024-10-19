@@ -25,7 +25,7 @@ StackTrack::StackTrack(const std::string& callerName)
 {
     if(mCount==0)
     {
-        mLog << "StackTrack START \n";
+        mLog << "StackTrack::start \n";
     }
     if(mLogger == nullptr)
     {
@@ -33,17 +33,17 @@ StackTrack::StackTrack(const std::string& callerName)
     }
     ++mCount;
     PrettifyStart();
-    mLog << mCallerName << " START \n";
+    mLog << mCallerName << "::start \n";
 }
 
 StackTrack::~StackTrack()
 {
     PrettifyStop();
-    mLog << mCallerName << " END \n";
+    mLog << mCallerName << "::stop \n";
     --mCount;
     if(mCount == 0)
     {
-        mLog << "StackTrack END \n";
+        mLog << "StackTrack::stop \n";
         mLogger->Log(mLog);
     }
 }
