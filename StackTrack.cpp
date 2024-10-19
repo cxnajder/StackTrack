@@ -23,20 +23,29 @@ void StringStreamLoggerToFile::Log(const std::stringstream& ss)
 StackTrack::StackTrack(const std::string& callerName)
 : mCallerName(callerName)
 {
+    if(mCount==0)
+    {
+        mLog << "StackTrack START \n";
+    }
     if(mLogger == nullptr)
+    {
         mLogger = std::make_unique<StringStreamLoggerToConsole>();
+    }
     ++mCount;
     PrettifyStart();
-    mLog << mCallerName << "::StackTrack START \n";
+    mLog << mCallerName << " START \n";
 }
 
 StackTrack::~StackTrack()
 {
     PrettifyStop();
-    mLog << mCallerName << "::StackTrack END \n";
+    mLog << mCallerName << " END \n";
     --mCount;
     if(mCount == 0)
+    {
+        mLog << "StackTrack END \n";
         mLogger->Log(mLog);
+    }
 }
 
 unsigned int StackTrack::mCount = 0;
