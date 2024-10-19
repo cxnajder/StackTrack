@@ -3,6 +3,7 @@
 
 #include <sstream>
 #include <memory>
+#include <chrono>
 
 class IStringStreamLogger
 {
@@ -40,6 +41,7 @@ class StackTrack
     static unsigned int mCount;
     static std::stringstream mLog;
     static std::unique_ptr<IStringStreamLogger> mLogger;
+    std::chrono::time_point<std::chrono::high_resolution_clock> mStart;
 
     private:
     void PrettifyStart();

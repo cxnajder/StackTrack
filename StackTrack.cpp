@@ -34,12 +34,16 @@ StackTrack::StackTrack(const std::string& callerName)
     ++mCount;
     PrettifyStart();
     mLog << mCallerName << "::start \n";
+    mStart = std::chrono::high_resolution_clock::now();
 }
 
 StackTrack::~StackTrack()
 {
+    std::chrono::duration<float> dur = std::chrono::high_resolution_clock::now() - mStart;
+    float ms = dur.count() * 1000.0f;
     PrettifyStop();
-    mLog << mCallerName << "::stop \n";
+    mLog << mCallerName << "::stop ";
+    mLog << "- " << ms << "ms \n";
     --mCount;
     if(mCount == 0)
     {
