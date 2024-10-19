@@ -18,12 +18,14 @@ StackTrack::StackTrack(const std::string& callerName)
 {
     if(mLogger == nullptr)
         mLogger = std::make_unique<StringStreamLoggerToConsole>();
-    mLog << mCallerName << "::StackTrack START \n";
     ++mCount;
+    PrettifyStart();
+    mLog << mCallerName << "::StackTrack START \n";
 }
 
 StackTrack::~StackTrack()
 {
+    PrettifyStop();
     mLog << mCallerName << "::StackTrack END \n";
     --mCount;
     if(mCount == 0)
@@ -34,3 +36,22 @@ unsigned int StackTrack::mCount = 0;
 std::stringstream StackTrack::mLog;
 std::unique_ptr<IStringStreamLogger> StackTrack::mLogger;
 
+
+void StackTrack::PrettifyStart() // Adds an arrow "--->"
+{
+    mLog << "| ";
+    for (unsigned int i = 1; i < mCount; ++i)
+    {
+        mLog << "--";
+    }
+    mLog << "-> ";
+}
+void StackTrack::PrettifyStop() // Adds an arrow "<---"
+{
+        mLog << "| <-";
+    for (unsigned int i = 1; i < mCount; ++i)
+    {
+        mLog << "--";
+    }
+        mLog << " ";
+}

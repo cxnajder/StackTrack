@@ -40,6 +40,10 @@ class StackTrack
     static unsigned int mCount;
     static std::stringstream mLog;
     static std::unique_ptr<IStringStreamLogger> mLogger;
+
+    private:
+    void PrettifyStart();
+    void PrettifyStop();
 };
 
 #endif
