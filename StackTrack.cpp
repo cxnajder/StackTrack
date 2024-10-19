@@ -2,8 +2,15 @@
 
 #include <iostream>
 
+#ifdef _WIN32
+#include <windows.h>  // This header is required for Windows-specific functions
+#endif
 void StringStreamLoggerToConsole::Log(const std::stringstream& ss)
 {
+#ifdef _WIN32
+    // Set console output to UTF-8 code page
+    SetConsoleOutputCP(CP_UTF8);
+#endif
     std::cout << ss.str();
 }
 
@@ -39,19 +46,30 @@ std::unique_ptr<IStringStreamLogger> StackTrack::mLogger;
 
 void StackTrack::PrettifyStart() // Adds an arrow "--->"
 {
-    mLog << "| ";
-    for (unsigned int i = 1; i < mCount; ++i)
+    if (mCount == 1)
     {
-        mLog << "--";
+        mLog << "├─";
     }
-    mLog << "-> ";
+    else
+    {
+        mLog << "│";
+        for (unsigned int i = 1; i < mCount; ++i)
+            mLog << "  ";
+        mLog << "└─";
+    }
 }
 void StackTrack::PrettifyStop() // Adds an arrow "<---"
 {
-        mLog << "| <-";
-    for (unsigned int i = 1; i < mCount; ++i)
+    if (mCount == 1)
     {
-        mLog << "--";
+        mLog << "├─";
     }
-        mLog << " ";
+    else
+    {
+        mLog << "│";
+        for (unsigned int i = 1; i < mCount; ++i)
+            mLog << "  ";
+        mLog << "┌─";
+    }
+
 }
