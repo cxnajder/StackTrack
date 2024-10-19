@@ -7,7 +7,7 @@ void artificialDelay()
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
 }
 
-void buzz()
+void baz()
 {
     STACK_TRACK_THIS_FUNCTION
     artificialDelay();
@@ -16,7 +16,7 @@ void buzz()
 void bar()
 {
     STACK_TRACK_THIS_FUNCTION
-    buzz();
+    baz();
 }
 
 void foo()
@@ -30,6 +30,6 @@ int main()
     STACK_TRACK_THIS_FUNCTION
     foo();
     bar();
-    buzz();
+    baz();
     foo();
 }
