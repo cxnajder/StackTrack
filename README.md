@@ -1,4 +1,4 @@
 ### Demo
 <p align="center">
-  <img demo.png">
+  <img src="demo.png">
 </p>
