@@ -23,4 +23,7 @@ int main()
 {
     STACK_TRACK_THIS_FUNCTION
     foo();
+    bar();
+    buzz();
+    foo();
 }
