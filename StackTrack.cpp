@@ -3,7 +3,7 @@
 #include <iostream>
 
 #ifdef _WIN32
-#include <windows.h> // This header is required for Windows-specific functions
+#include <windows.h>
 #endif
 void StringStreamLoggerToConsole::Log(const std::stringstream &ss) {
 #ifdef _WIN32
@@ -56,7 +56,7 @@ std::unordered_map<std::thread::id, unsigned int> StackTrack::mCount;
 std::unordered_map<std::thread::id, std::stringstream> StackTrack::mLog;
 std::unique_ptr<IStringStreamLogger> StackTrack::mLogger;
 
-void StackTrack::PrettifyStart() // Adds an arrow "--->"
+void StackTrack::PrettifyStart()
 {
   if (mCount.at(mThread) == 1) {
     mLog.at(mThread) << "├─";
@@ -66,7 +66,7 @@ void StackTrack::PrettifyStart() // Adds an arrow "--->"
     mLog.at(mThread) << "├─";
   }
 }
-void StackTrack::PrettifyStop() // Adds an arrow "<---"
+void StackTrack::PrettifyStop()
 {
   if (mCount.at(mThread) == 1) {
     mLog.at(mThread) << "├─";
