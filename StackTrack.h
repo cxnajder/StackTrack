@@ -10,6 +10,7 @@
 class IStringStreamLogger {
 public:
   virtual void Log(const std::stringstream &) = 0;
+  virtual ~IStringStreamLogger() = default;
 };
 
 class StringStreamLoggerToConsole : public IStringStreamLogger {
